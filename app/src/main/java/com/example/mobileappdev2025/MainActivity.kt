@@ -51,6 +51,11 @@ class MainActivity : AppCompatActivity() {
         };
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -77,6 +82,9 @@ class MainActivity : AppCompatActivity() {
         // user data
         val file = File(applicationContext.filesDir, "user_data.csv")
 
+        // clears text
+        // file.writeText("")
+
         if (file.exists()) {
             val readResult = FileInputStream(file)
             val scanner = Scanner(readResult)
@@ -87,14 +95,12 @@ class MainActivity : AppCompatActivity() {
                 wordDefinition.add(WordDefinition(wd[0], wd[1]))
             }
         } else { // default data
-
-            file.createNewFile()
-
             val reader = Scanner(resources.openRawResource(R.raw.default_words))
             while(reader.hasNextLine()){
                 val line = reader.nextLine()
                 val wd = line.split("|")
                 wordDefinition.add(WordDefinition(wd[0], wd[1]))
+                file.writeText("")
                 file.appendText("${wd[0]}|${wd[1]}\n")
             }
         }
