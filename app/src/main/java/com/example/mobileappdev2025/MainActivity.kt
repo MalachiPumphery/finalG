@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.ListView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -48,6 +49,9 @@ class MainActivity : AppCompatActivity() {
         defList.setOnItemClickListener { _, _, index, _ ->
             pickNewWordAndLoadDataList();
             myAdapter.notifyDataSetChanged();
+
+            // toast popup
+            Toast.makeText(this, "hello", Toast.LENGTH_LONG).show()
         };
     }
 
