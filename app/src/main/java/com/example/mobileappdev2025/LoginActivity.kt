@@ -9,14 +9,18 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import org.json.JSONObject
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var firebaseAuth : FirebaseAuth
+    private lateinit var database : FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +31,14 @@ class LoginActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        var hardcodeJson = "{\"Eric\": { \"age\": 28}}"
+
+        var jo = JSONObject(hardcodeJson)
+        var eric = jo.getJSONObject("Eric")
+
+        if (eric.has("age"))
+            var age = eric.getInt("age") ?: -1
 
         FirebaseApp.initializeApp(this);
 
@@ -53,7 +65,11 @@ class LoginActivity : AppCompatActivity() {
                             "Authentication Success.",
                             Toast.LENGTH_SHORT,
                         ).show()
-                        //val user = auth.currentUser
+
+                        val user = firebaseAuth.currentUser;
+
+                        // get document
+
                         //updateUI(user)
                     } else {
                         // If sign in fails, display a message to the user.
@@ -66,6 +82,22 @@ class LoginActivity : AppCompatActivity() {
                         //updateUI(null)
                     }
                 }
+        };
+    }
+
+
+    private fun getConnections(_userID : String): Task<List<String>>
+    {
+        val connectionRef = database.collection("contections").document(_userID);
+
+        return connectionRef.get().continueWith { task ->
+            val document = task.result
+
+            if (document.exists())
+            {
+                val data = document.data
+                List<String> people = data?.get("people") as? List<String> ?: emptyList()
+            }
         };
     }
 }
