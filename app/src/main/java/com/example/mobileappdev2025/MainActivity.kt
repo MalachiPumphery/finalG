@@ -14,6 +14,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.mobileappdev2025.fragments.*
 import java.io.File
 import java.io.FileInputStream
 import java.util.Random
@@ -29,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private var score : Int = 1;
     private var totalCorrect : Int = 2;
     private var totalWrong : Int = 3;
+    private lateinit var bottomNav: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +57,22 @@ class MainActivity : AppCompatActivity() {
             // toast popup
             Toast.makeText(this, "hello", Toast.LENGTH_LONG).show()
         };
+
+        bottomNav = findViewById(R.id.bottom_navigation)
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_courses -> loadFragment(CoursesFragment())
+                R.id.nav_study_groups -> loadFragment(StudyGroupsFragment())
+                R.id.nav_schedule -> loadFragment(ScheduleFragment())
+                R.id.nav_profile -> loadFragment(ProfileFragment())
+            }
+            true
+        }
+
+        // Set default fragment
+        if (savedInstanceState == null) {
+            loadFragment(CoursesFragment())
+        }
     }
 
     override fun onDestroy() {
@@ -147,5 +167,11 @@ class MainActivity : AppCompatActivity() {
     {
         var myIntent = Intent(this, AddWordActivity::class.java);
         startActivityForResult(myIntent, ADD_WORD_CODE)
+    }
+
+    private fun loadFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
     }
 }
