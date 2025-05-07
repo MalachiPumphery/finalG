@@ -1,4 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">MobileAppDev2025</string>
     <string name="stats">Stats</string>
+    <string name="courses">Courses</string>
+    <string name="study_groups">Study Groups</string>
+    <string name="schedule">Schedule</string>
+    <string name="profile">Profile</string>
+    <string name="add_word">Add Word</string>
+    <string name="word">Word</string>
+    <string name="definition">Definition</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="error_loading_data">Error loading data</string>
+    <string name="error_saving_word">Error saving word</string>
+    <string name="no_words_available">No words available</string>
+    <string name="invalid_word_or_definition">Invalid word or definition</string>
 </resources>
