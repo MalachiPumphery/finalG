@@ -3,11 +3,10 @@ package com.example.mobileappdev2025.models
 data class StudyGroup(
     val id: String = "",
     val name: String = "",
-    val courseId: String = "",
     val description: String = "",
+    val courseId: String = "",
     val members: List<String> = listOf(),
-    val studySessions: List<StudySession> = listOf(),
-    val maxMembers: Int = 6
+    val createdAt: Long = System.currentTimeMillis()
 )
 
 data class StudySession(
