@@ -52,6 +52,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(platform("com.google.firebase:firebase-bom:32.8.1"))//for firebase auth
     implementation("com.google.firebase:firebase-auth:22.0.0")//for firebase auth
+    implementation("com.google.firebase:firebase-firestore-ktx:24.10.3")
 
 
     // TODO: Add the dependencies for Firebase products you want to use

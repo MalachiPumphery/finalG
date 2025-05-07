@@ -1,26 +1,24 @@
 package com.example.mobileappdev2025
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.android.gms.tasks.Task
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
-import org.json.JSONObject
 
 class LoginActivity : AppCompatActivity() {
-    private lateinit var firebaseAuth : FirebaseAuth
-    private lateinit var database : FirebaseFirestore
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var database: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,72 +30,70 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
-        var hardcodeJson = "{\"Eric\": { \"age\": 28}}"
+        FirebaseApp.initializeApp(this)
+        firebaseAuth = Firebase.auth
+        database = FirebaseFirestore.getInstance()
 
-        var jo = JSONObject(hardcodeJson)
-        var eric = jo.getJSONObject("Eric")
+        // Check if user is already logged in
+        firebaseAuth.currentUser?.let {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+            return@onCreate
+        }
 
-        if (eric.has("age"))
-            var age = eric.getInt("age") ?: -1
+        val loginButton = findViewById<Button>(R.id.login_button)
+        val signupButton = findViewById<Button>(R.id.signup_button)
+        val emailInput = findViewById<TextInputEditText>(R.id.email_input)
+        val passwordInput = findViewById<TextInputEditText>(R.id.password_input)
 
-        FirebaseApp.initializeApp(this);
+        loginButton.setOnClickListener {
+            val email = emailInput.text.toString().trim()
+            val password = passwordInput.text.toString().trim()
 
-        firebaseAuth = Firebase.auth;
+            // Validate input fields
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(
+                    this,
+                    "Please fill in all fields",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
 
-        val loginButton = findViewById<Button>(R.id.login_button);
-
-        loginButton.setOnClickListener{
-            val emailEditText = findViewById<EditText>(R.id.email_edit_text);
-            val passwordEditText = findViewById<EditText>(R.id.password_edit_text);
-
-            val email = emailEditText.text.toString();
-            val password = passwordEditText.text.toString();
-
-            // check if email or password is empty
+            loginButton.isEnabled = false // Disable button during login
 
             firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
+                    loginButton.isEnabled = true // Re-enable button
                     if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d("AUTH", "signInWithEmail:success")
+                        Log.d(TAG, "signInWithEmail:success")
                         Toast.makeText(
-                            baseContext,
-                            "Authentication Success.",
-                            Toast.LENGTH_SHORT,
+                            this,
+                            "Login successful",
+                            Toast.LENGTH_SHORT
                         ).show()
 
-                        val user = firebaseAuth.currentUser;
-
-                        // get document
-
-                        //updateUI(user)
+                        // Navigate to MainActivity
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
                     } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w("AUTH", "signInWithEmail:failure", task.exception)
+                        Log.w(TAG, "signInWithEmail:failure", task.exception)
                         Toast.makeText(
-                            baseContext,
-                            "Authentication failed.",
-                            Toast.LENGTH_SHORT,
+                            this,
+                            "Authentication failed: ${task.exception?.message ?: "Unknown error"}",
+                            Toast.LENGTH_SHORT
                         ).show()
-                        //updateUI(null)
                     }
                 }
-        };
+        }
+
+        signupButton.setOnClickListener {
+            // TODO: Implement signup navigation
+            Toast.makeText(this, "Signup functionality coming soon", Toast.LENGTH_SHORT).show()
+        }
     }
 
-
-    private fun getConnections(_userID : String): Task<List<String>>
-    {
-        val connectionRef = database.collection("contections").document(_userID);
-
-        return connectionRef.get().continueWith { task ->
-            val document = task.result
-
-            if (document.exists())
-            {
-                val data = document.data
-                List<String> people = data?.get("people") as? List<String> ?: emptyList()
-            }
-        };
+    companion object {
+        private const val TAG = "LoginActivity"
     }
 }
