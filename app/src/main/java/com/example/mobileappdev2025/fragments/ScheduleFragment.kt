@@ -31,11 +31,11 @@ class ScheduleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        
+
         calendarView = view.findViewById(R.id.calendar_view)
         recyclerView = view.findViewById(R.id.events_recycler_view)
         fab = view.findViewById(R.id.fab_add_event)
-        
+
         setupCalendar()
         setupRecyclerView()
         setupFab()
@@ -57,7 +57,7 @@ class ScheduleFragment : Fragment() {
                 Toast.makeText(context, "Selected: ${event.title}", Toast.LENGTH_SHORT).show()
             }
         )
-        
+
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             this.adapter = this@ScheduleFragment.adapter
@@ -73,7 +73,7 @@ class ScheduleFragment : Fragment() {
                 startTime = System.currentTimeMillis(),
                 endTime = System.currentTimeMillis() + 7200000, // 2 hours later
                 location = "Library Room 302",
-                type = Event.EventType.STUDY_SESSION
+                type = Event.EventType.STUDY_SESSION // Correct usage here
             ),
             Event(
                 id = "2",
@@ -82,7 +82,7 @@ class ScheduleFragment : Fragment() {
                 startTime = System.currentTimeMillis() + 86400000, // 1 day later
                 endTime = System.currentTimeMillis() + 86400000,
                 location = "Online",
-                type = Event.EventType.ASSIGNMENT
+                type = Event.EventType.ASSIGNMENT // Correct usage here
             )
         )
         adapter.updateEvents(dummyEvents)
@@ -94,4 +94,4 @@ class ScheduleFragment : Fragment() {
             Toast.makeText(context, "Add event functionality coming soon!", Toast.LENGTH_SHORT).show()
         }
     }
-} 
+}

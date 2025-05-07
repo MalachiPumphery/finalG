@@ -29,7 +29,7 @@ class StudyGroupsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        recyclerView = view.findViewById(R.id.groups_recycler_view)
+        recyclerView = view.findViewById(R.id.study_groups_recycler_view)
         fab = view.findViewById(R.id.fab_add_group)
         
         setupRecyclerView()
